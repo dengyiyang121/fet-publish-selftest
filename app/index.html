@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Functional Ear Trainer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-root">
+    <!-- SCREEN 1: HOME / CURRICULUM & MODE HUB -->
+    <div class="screen-hub" id="screen-hub">
+      <header class="hub-header">
+        <div class="hub-brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18V5l12-2v13"></path>
+              <circle cx="6" cy="18" r="3"></circle>
+              <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+          </div>
+          <div>
+            <div class="brand-name">Functional Ear Trainer</div>
+            <div class="brand-meta">Alain Benbassat Method · Tonal Context &amp; Melodic Dictation</div>
+          </div>
+        </div>
+
+        <nav class="hub-nav" role="tablist">
+          <button class="hub-tab active" data-mode="single" id="tab-single">Single-Note Training</button>
+          <button class="hub-tab" data-mode="melodic" id="tab-melodic">Melodic Dictation</button>
+          <button class="hub-tab" data-mode="custom" id="tab-custom">Custom Session</button>
+          <button class="hub-tab" data-mode="stats" id="tab-stats">Statistics</button>
+        </nav>
+
+        <div class="hub-actions">
+          <span class="hub-progress-summary" id="sidebar-completion-badge">0 / 48</span>
+          <button class="btn-icon-only" id="theme-toggle-btn" title="Toggle Light/Dark Appearance">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="hub-body">
+        <!-- Curriculum Browser (Single-Note & Melodic Dictation) -->
+        <section class="hub-section" id="hub-curriculum-section">
+          <div class="hub-section-bar">
+            <div>
+              <h1 class="hub-section-title" id="sidebar-mode-heading">Single-Note Curriculum</h1>
+              <p class="hub-section-sub" id="hub-section-sub">Select a level to enter the full-screen practice room.</p>
+            </div>
+            <button class="btn-solid" id="btn-resume-active-level">
+              Open Practice Room →
+            </button>
+          </div>
+          <div class="curriculum-chapters" id="curriculum-list"></div>
+        </section>
+        <!-- Custom Session Builder -->
+        <section class="hub-section hidden" id="view-custom">
+          <div class="hub-section-bar">
+            <div>
+              <h1 class="hub-section-title">Custom Practice Session</h1>
+              <p class="hub-section-sub">Configure scale degrees, tonal center behavior, octave span, and dictation phrase length.</p>
+            </div>
+            <button class="btn-solid" id="btn-launch-custom">Start Custom Session →</button>
+          </div>
+
+          <div class="custom-grid">
+            <div class="custom-panel saved-sessions-panel">
+              <div class="panel-label">Saved Sessions</div>
+              <div class="saved-session-save-row">
+                <input type="text" id="saved-session-name" placeholder="Name this setup (e.g. Minor 3rds, Roving)" maxlength="60" />
+                <button class="btn-solid" id="btn-save-session">Save Current Setup</button>
+              </div>
+              <div id="saved-sessions-list" class="saved-sessions-list"></div>
+            </div>
+            <div class="custom-panel">
+              <div class="panel-label">01 / Exercise &amp; Tonality</div>
+              <div class="field-row">
+                <label for="cust-exercise-type">Exercise Mode</label>
+                <select id="cust-exercise-type">
+                  <option value="single">Single-Note Functional</option>
+                  <option value="melodic">Melodic Dictation (Note Sequence)</option>
+                </select>
+              </div>
+              <div class="field-row">
+                <label for="cust-mode">Scale Tonality</label>
+                <select id="cust-mode">
+                  <option value="major">Major (I – IV – V7 – I)</option>
+                  <option value="minor">Minor (i – iv – V7 – i)</option>
+                </select>
+              </div>
+              <div class="field-row">
+                <label for="cust-key-mode">Key Center</label>
+                <select id="cust-key-mode">
+                  <option value="fixed">Fixed Key</option>
+                  <option value="roving">Roving Key (Changes Every Question)</option>
+                </select>
+              </div>
+              <div class="field-row" id="cust-fixed-key-row">
+                <label for="cust-fixed-key">Root Key</label>
+                <select id="cust-fixed-key">
+                  <option value="0">C</option>
+                  <option value="1">D♭ / C♯</option>
+                  <option value="2">D</option>
+                  <option value="3">E♭</option>
+                  <option value="4">E</option>
+                  <option value="5">F</option>
+                  <option value="6">G♭ / F♯</option>
+                  <option value="7">G</option>
+                  <option value="8">A♭</option>
+                  <option value="9">A</option>
+                  <option value="10">B♭</option>
+                  <option value="11">B</option>
+                </select>
+              </div>
+              <div class="field-row">
+                <label for="cust-octaves">Octave Range</label>
+                <select id="cust-octaves">
+                  <option value="1">1 Octave (Middle Register)</option>
+                  <option value="2" selected>2 Octaves</option>
+                  <option value="3">3 Octaves (Wide Range)</option>
+                </select>
+              </div>
+              <div class="field-row">
+                <label for="cust-questions">Session Length</label>
+                <select id="cust-questions">
+                  <option value="15">15 Questions</option>
+                  <option value="25" selected>25 Questions</option>
+                  <option value="40">40 Questions</option>
+                  <option value="999">Endless (∞)</option>
+                </select>
+              </div>
+            </div>
+            <div class="custom-panel">
+              <div class="panel-label">02 / Melodic Dictation &amp; Timing</div>
+              <div class="field-row">
+                <label for="cust-seq-len">Phrase Length: <strong id="cust-seq-len-val">4 Notes</strong></label>
+                <input type="range" id="cust-seq-len" min="2" max="8" value="4" />
+              </div>
+              <div class="field-row">
+                <label for="cust-bpm">Dictation Tempo: <strong id="cust-bpm-val">110 BPM</strong></label>
+                <input type="range" id="cust-bpm" min="60" max="180" step="5" value="110" />
+              </div>
+              <div class="field-row">
+                <label for="cust-max-leap">Max Interval Leap</label>
+                <select id="cust-max-leap">
+                  <option value="4">Stepwise &amp; Thirds (≤ 4 semitones)</option>
+                  <option value="7" selected>Musical Phrases (≤ Perfect 5th)</option>
+                  <option value="12">Wide Leaps (≤ 1 Octave)</option>
+                </select>
+              </div>
+              <div class="field-row">
+                <label for="cust-cadence-type">Cadence Voicing</label>
+                <select id="cust-cadence-type">
+                  <option value="full">Full I – IV – V7 – I Cadence</option>
+                  <option value="tonic-only">Single Tonic Chord Only</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="custom-panel">
+            <div class="custom-degrees-top">
+              <div class="panel-label">03 / Active Scale Degrees</div>
+              <div class="preset-bar">
+                <button class="btn-chip" data-preset="lower">Lower (1–4)</button>
+                <button class="btn-chip" data-preset="upper">Upper (5–1)</button>
+                <button class="btn-chip" data-preset="triad">Triad (1,3,5)</button>
+                <button class="btn-chip" data-preset="penta">Pentatonic</button>
+                <button class="btn-chip" data-preset="major">All 7 Major</button>
+                <button class="btn-chip" data-preset="minor">Minor</button>
+                <button class="btn-chip" data-preset="chromatic">All 12 Chromatic</button>
+              </div>
+            </div>
+            <div class="custom-degree-toggles" id="custom-degree-toggles"></div>
+          </div>
+        </section>
+
+        <!-- Statistics -->
+        <section class="hub-section hidden" id="view-stats">
+          <div class="hub-section-bar">
+            <div>
+              <h1 class="hub-section-title">Statistics &amp; Per-Degree Mastery</h1>
+              <p class="hub-section-sub">Track which scale degrees are locked into your intuition and which need work.</p>
+            </div>
+            <div class="stats-bar-actions">
+              <span id="stat-export-status" class="stats-export-status"></span>
+              <button class="btn-solid" id="btn-export-log">Export Detailed Log</button>
+            </div>
+          </div>
+
+          <div class="stats-kpi-grid">
+            <div class="kpi-card">
+              <span class="kpi-label">Total Questions</span>
+              <span class="kpi-value" id="stat-total-questions">0</span>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-label">Overall Accuracy</span>
+              <span class="kpi-value ok" id="stat-overall-accuracy">0%</span>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-label">Best Streak</span>
+              <span class="kpi-value accent" id="stat-best-streak">0</span>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-label">Stars Earned</span>
+              <span class="kpi-value accent" id="stat-total-stars">0</span>
+            </div>
+          </div>
+
+          <div class="custom-panel">
+            <div class="panel-label">Accuracy by Scale Degree</div>
+            <div class="degree-bars-grid" id="degree-bars-grid"></div>
+          </div>
+
+          <div class="custom-panel">
+            <div class="panel-label">Recent Sessions</div>
+            <div class="history-table-wrap">
+              <table class="history-table">
+                <thead>
+                  <tr><th>Date</th><th>Mode</th><th>Level</th><th>Questions</th><th>Accuracy</th><th>Stars</th></tr>
+                </thead>
+                <tbody id="session-history-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="stats-footer">
+            <span class="stats-footer-note">Clearing removes all statistics, session history, and the detailed log.</span>
+            <button class="btn-danger" id="btn-reset-stats">Clear All Statistics</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- =====================================================================
+         SCREEN 2: FULL-SCREEN PRACTICE ROOM
+         ===================================================================== -->
+    <div class="screen-practice hidden" id="screen-practice">
+      <header class="practice-topbar">
+        <div class="practice-progress-line" id="practice-progress-line"></div>
+
+        <div class="practice-nav-left">
+          <button class="btn-back-hub" id="btn-back-hub">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Levels
+          </button>
+          <div class="practice-level-tag">
+            <span class="practice-level-code" id="active-level-code">1.1</span>
+            <span class="practice-level-title" id="active-level-title">Lower Tetrachord</span>
+          </div>
+        </div>
+
+        <div class="practice-telemetry">
+          <div class="telemetry-item"><span class="telemetry-key">Key</span><span class="telemetry-val accent" id="metric-key">C Major</span></div>
+          <div class="telemetry-item"><span class="telemetry-key">Progress</span><span class="telemetry-val" id="metric-progress">0 / 20</span></div>
+          <div class="telemetry-item"><span class="telemetry-key">Accuracy</span><span class="telemetry-val ok" id="metric-accuracy">100%</span></div>
+          <div class="telemetry-item"><span class="telemetry-key">Streak</span><span class="telemetry-val" id="metric-streak">0</span></div>
+        </div>
+
+        <div class="practice-actions-right">
+          <button class="btn-utility" id="handsfree-toggle-btn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
+            <span id="handsfree-status">Hands-Free</span>
+          </button>
+          <button class="btn-utility" id="settings-toggle-btn" title="Audio &amp; Display Settings">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+            Settings
+          </button>
+
+          <div class="settings-popover hidden" id="settings-popover">
+            <div class="popover-row">
+              <span>Instrument</span>
+              <select id="instrument-select">
+                <option value="grand-piano">Concert Grand Piano (Synth)</option>
+                <option value="waf-fluid">WebAudioFont Grand (FluidR3)</option>
+                <option value="waf-jclive" selected>WebAudioFont Grand (JCLive)</option>
+                <option value="piano-samples">Recorded Grand Piano (Samples)</option>
+                <option value="electric-piano">Warm Rhodes EP</option>
+                <option value="classical-pluck">Concert Harp / Guitar</option>
+                <option value="warm-pad">Warm Strings Pad</option>
+              </select>
+            </div>
+            <div class="popover-row">
+              <span>Key Labels</span>
+              <select id="label-mode-select">
+                <option value="both">1 / Do (Both)</option>
+                <option value="degree">Scale Degrees (1, 2, 3…)</option>
+                <option value="solfege">Solfège (Do, Re, Mi…)</option>
+                <option value="note">Note Names (C, D, E…)</option>
+              </select>
+            </div>
+            <div class="popover-row">
+              <span>Volume</span>
+              <input type="range" id="volume-slider" min="0" max="100" value="82" />
+            </div>
+            <div class="popover-row">
+              <span>Cadence Speed</span>
+              <div class="popover-range-wrap">
+                <input type="range" id="cadence-speed-slider" min="40" max="160" step="5" value="70" />
+                <strong class="popover-range-val" id="cadence-speed-val">70%</strong>
+              </div>
+            </div>
+            <div class="popover-row">
+              <span>Resolution Speed</span>
+              <div class="popover-range-wrap">
+                <input type="range" id="resolution-speed-slider" min="40" max="160" step="5" value="100" />
+                <strong class="popover-range-val" id="resolution-speed-val">100%</strong>
+              </div>
+            </div>
+            <div class="popover-row">
+              <span>Gap After Note</span>
+              <div class="popover-range-wrap">
+                <input type="range" id="note-gap-slider" min="0" max="2" step="0.05" value="0.55" />
+                <strong class="popover-range-val" id="note-gap-val">0.55s</strong>
+              </div>
+            </div>
+            <div class="popover-row">
+              <span>Hands-Free Pause</span>
+              <div class="popover-range-wrap">
+                <input type="range" id="handsfree-pause-slider" min="0.5" max="8" step="0.5" value="1.5" />
+                <strong class="popover-range-val" id="handsfree-pause-val">1.5s</strong>
+              </div>
+            </div>
+            <div class="popover-row">
+              <span>Auto-Advance Delay</span>
+              <div class="popover-range-wrap">
+                <input type="range" id="auto-advance-slider" min="0" max="2" step="0.05" value="0.3" />
+                <strong class="popover-range-val" id="auto-advance-val">0.3s</strong>
+              </div>
+            </div>
+            <div class="popover-divider"></div>
+            <label class="popover-check">
+              <input type="checkbox" id="chk-auto-advance" checked /> Auto-advance to next question
+            </label>
+            <label class="popover-check">
+              <input type="checkbox" id="chk-resolve-on-correct" checked /> Play resolution on correct answer
+            </label>
+            <label class="popover-check">
+              <input type="checkbox" id="chk-cadence-always" checked /> Play cadence every question
+            </label>
+          </div>
+        </div>
+      </header>
+      <main class="practice-stage" id="practice-stage">
+        <!-- Single-Note Functional Stage -->
+        <div class="single-note-stage" id="single-note-stage">
+          <div class="status-readout" id="status-readout">
+            <div class="status-headline" id="orb-main-label">Ready</div>
+            <div class="status-subline" id="orb-sub-label">Press Start or Enter</div>
+          </div>
+          <div class="resolution-header-row">
+            <span id="resolution-caption">Functional Gravity · Lower half (1–4) resolves DOWN to Do · Upper half (5–7) resolves UP to Do</span>
+          </div>
+          <div class="resolution-nodes" id="resolution-nodes"></div>
+        </div>
+
+        <!-- Melodic Dictation Stage -->
+        <div class="melodic-stage hidden" id="melodic-stage">
+          <div class="melodic-stage-header">
+            <span id="melodic-prompt-status">Listen to the cadence and melodic string, then identify each note in order.</span>
+            <span class="melodic-meta-badge" id="melodic-meta-badge">4 Notes · 110 BPM</span>
+          </div>
+          <div class="melodic-slots-wrapper">
+            <svg class="melodic-contour-svg" id="melodic-contour-svg" preserveAspectRatio="none"></svg>
+            <div class="melodic-slots-row" id="melodic-slots-row"></div>
+          </div>
+        </div>
+
+        <!-- Transport Controls -->
+        <div class="transport-bar">
+          <button class="btn-solid" id="btn-start-next">▶ Start</button>
+          <button class="btn-transport" id="btn-replay-note" disabled>↻ <span id="replay-note-label">Repeat Note</span> <kbd>Space</kbd></button>
+          <button class="btn-transport" id="btn-replay-cadence" disabled>Cadence + Note <kbd>C</kbd></button>
+          <button class="btn-transport" id="btn-hint-resolve" disabled>Resolution Hint <kbd>H</kbd></button>
+          <button class="btn-transport" id="btn-restart-session">Reset</button>
+        </div>
+      </main>
+
+      <div class="keybed-dock">
+        <div class="functional-piano">
+          <div class="piano-black-row" id="piano-black-row"></div>
+          <div class="piano-white-row" id="piano-white-row"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Level Complete Modal -->
+    <div class="modal-backdrop hidden" id="level-complete-modal">
+      <div class="modal-card">
+        <div class="modal-stars" id="modal-stars">★★★</div>
+        <h2 id="modal-title">Level Complete!</h2>
+        <p id="modal-subtitle">Great tonal focus on this level.</p>
+        <div class="modal-stats-row">
+          <div class="modal-stat">
+            <span>Accuracy</span>
+            <strong id="modal-accuracy">95%</strong>
+          </div>
+          <div class="modal-stat">
+            <span>Best Streak</span>
+            <strong id="modal-streak">14</strong>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-transport" id="modal-btn-retry">↺ Retry Level</button>
+          <button class="btn-solid" id="modal-btn-next">Next Level →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="curriculum.js"></script>
+  <script src="vendor/webaudiofont/WebAudioFontPlayer.js"></script>
+  <script src="vendor/webaudiofont/0000_FluidR3_GM_sf2_file.js"></script>
+  <script src="vendor/webaudiofont/0000_JCLive_sf2_file.js"></script>
+  <script src="vendor/samples/acoustic_grand_piano-ogg.js"></script>
+  <script src="audio-engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
